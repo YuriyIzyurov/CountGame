@@ -1,0 +1,14 @@
+.board {
+  margin: 0 auto;
+  background: url('../public/cockie_background-j.jpg') no-repeat center center;
+  background-size: cover;
+  width: 1130px;
+  height: 100vh;
+}
+.items {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  top: 150px;
+}
+

@@ -1,0 +1,6 @@
+### NextJS ###
+# Next build dir
+.next/
+# User-specific stuff
+.idea
+node_modules
