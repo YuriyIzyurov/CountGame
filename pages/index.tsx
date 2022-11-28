@@ -1,9 +1,11 @@
 import A from "../components/A";
 import Coockie1 from "../components/ComponentsSVG/Coockie1";
+import {GameBackground} from "../styles/styles";
 
 const Index = () => {
+
     return (
-        <div>
+        <GameBackground background={'coockie_background-empty.jpg'}>
             <div className='navbar'>
                 <A href={'/'} text='Main'/>
                 <A href={'/Board'} text='Board'/>
@@ -24,7 +26,7 @@ const Index = () => {
                     }
                 `}
             </style>
-            </div>
+        </GameBackground>
     );
 };
 

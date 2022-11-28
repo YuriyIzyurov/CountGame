@@ -1,12 +1,58 @@
-import React, { useState } from 'react';
-import {Button, ChooseSection, ItemsCount, PickCircle, SettingsWrapper, Values} from "../styles/styles";
+import React, {useEffect, useState} from 'react';
+import {
+    Button,
+    ChooseSection,
+    GameBackground,
+    ItemsCount,
+    PickCircle,
+    ContentWrapper,
+    Values
+} from "../styles/styles";
+import {useStore} from "../store";
+import {useRouter} from "next/router";
+
+
 
 const Settings = () => {
-    const [itemsCount, setItemsCount] = useState(2)
-    const [values, setValues] = useState(0)
+    const [itemsCount, setItemsCount] = useState<number>(2)
+    const [values, setValues] = useState<number>(0)
+    const [isIncrease, setIsIncrease] = useState<boolean>(true)
+    const store = useStore()
+    const router = useRouter()
 
+    const chooseSymbol = (values: number) => {
+        return values === 0
+            ? String.fromCharCode(Math.floor(Math.random()*(1040-1071))+1071)
+            : Math.round( 0.5 + Math.random() * values)
+    }
+    const chooseDirection = (values: number, isIncrease: boolean, set: Set<number|string>) => {
+        const a = Array.from(set)
+        if( values === 0 ) {
+            return isIncrease
+                ? a.sort()
+                : a.sort().reverse()
+        } else return isIncrease
+            ? a.sort((a:number,b:number) => a - b)
+            : a.sort((a:number,b:number) => b - a)
+    }
 
-    const setSelectorsOptions = (index: number, arr: unknown[]) => {
+    const generateRandomSymbols = (values: number, isIncrease: boolean): (number | string)[] => {
+        let set: Set<number|string> = new Set()
+        while (set.size < 5) {
+            set.add(chooseSymbol(values))
+        }
+        return chooseDirection(values, isIncrease, set)
+    }
+
+    const setOptionsAndStartGame = () => {
+        const array = generateRandomSymbols(values, isIncrease)
+        store.shuffle()
+        store.getRandomNumbers(array)
+        redirect()
+    }
+    const redirect = () => router.push('/Board')
+
+    const setSelectorsOptions = (index: number, arr: unknown[]): Array<number | string> => {
         let width
         let value
         let justifyContent
@@ -27,7 +73,8 @@ const Settings = () => {
         return [width, justifyContent, value]
     }
     return (
-        <SettingsWrapper>
+        <GameBackground background={'background-stars.jpg'}>
+          <ContentWrapper width={700} height={661}>
             <img style={{width: '700px'}} src={'/settings_window.svg'} alt={'settings'}/>
             <ItemsCount>
                 {Array.from({length: 4}).map((item, index, arr) => {
@@ -36,7 +83,7 @@ const Settings = () => {
                         key={index}
                         width={width}
                         justifyContent={justifyContent}
-                        onClick={() => setItemsCount(itemCount)}
+                        onClick={() => setItemsCount(itemCount as number)}
                     >
                         {itemsCount === itemCount && <PickCircle/>}
                     </ChooseSection>
@@ -49,19 +96,17 @@ const Settings = () => {
                         key={index}
                         width={width}
                         justifyContent={justifyContent}
-                        onClick={() => setValues(value)}
+                        onClick={() => setValues(value as number)}
                     >
                         {values === value && <PickCircle/>}
                     </ChooseSection>
                 })}
             </Values>
-            <Button
-                position={[687,426]}
-                size={[279,63,31]}
-            >
-                Играть
-            </Button>
-        </SettingsWrapper>
+            <Button style={{opacity: !isIncrease ? '0.5' : '1'}} onClick={() => setIsIncrease(true)} position={[400,75]} size={[260,55,28]} background={'#ffd748'} color={' #423f45'}>По возрастанию</Button>
+            <Button style={{opacity: isIncrease ? '0.5' : '1'}} onClick={() => setIsIncrease(false)} position={[400,363]} size={[260,55,28]} background={'#ffd748'} color={' #423f45'}>По убыванию</Button>
+            <Button position={[549,210]} size={[279,63,31]} background={'#2bd600'} color={'white'} onClick={setOptionsAndStartGame}>Играть</Button>
+          </ContentWrapper>
+        </GameBackground>
     );
 };
 

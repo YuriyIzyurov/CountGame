@@ -3,15 +3,15 @@ import { PositionType } from "../constants";
 
 
 export const SHELF_GAP_V = 15; // ▀↕️▄ вертикальный отступ между полками
-const SHELF_START_H = 15; // горизонтальный отступ между началом полки и первой ячейкой
+const SHELF_START_H = 8.1; // горизонтальный отступ между началом полки и первой ячейкой
 const DROP_WIDTH = 9.8; // ширина ячейки на полке
 const DROP_HEIGHT = 11; // высота ячейки на полке
 const DRAG_SIZE = 9.8; // ширина/высота draggable бутылки
 
 
 const getShelfItemPositionStyle = ([top, left]: PositionType) => `
-	top: ${DROP_HEIGHT * 2.8}rem;
-	left: ${left * DROP_WIDTH + SHELF_START_H}rem;
+	top: ${DROP_HEIGHT * 3.87}rem;
+	left: ${left * (DROP_WIDTH + 0.2) + SHELF_START_H}rem;
 `;
 const getButtonPosition = (position: number[], size: number[]) => `
     width: ${size[0]}px;
@@ -24,15 +24,15 @@ const getTopShelfItemPositionsStyle = ([top, left]: PositionType, shelf: boolean
     let coordinates
     let shelfGap = 0
     switch (left) {
-        case 0: coordinates = [6, left * (DROP_WIDTH + 2) + 8]
+        case 0: coordinates = [9, left * (DROP_WIDTH + 2) + 8]
             break
-        case 1: coordinates = [-1, left * (DROP_WIDTH + 2.7) + 8]
+        case 1: coordinates = [2, left * (DROP_WIDTH + 2.7) + 8]
             break
-        case 2: coordinates = [9, left * (DROP_WIDTH + 1.8) + 8]
+        case 2: coordinates = [12, left * (DROP_WIDTH + 1.8) + 8]
             break
-        case 3: coordinates = [-1, left * (DROP_WIDTH + 1.8) + 8]
+        case 3: coordinates = [2, left * (DROP_WIDTH + 1.8) + 8]
             break
-        case 4: coordinates = [6, left * (DROP_WIDTH + 1.8) + 8]
+        case 4: coordinates = [9, left * (DROP_WIDTH + 1.8) + 8]
     }
     if(shelf) shelfGap = 9.8
     return `
@@ -66,13 +66,12 @@ const Slider = styled.div`
   background: transparent;
 `
 export const ItemDragWrapper = styled(DNDItem)<{isDragging: boolean}>`
-  z-index: 1;
   width: ${DRAG_SIZE}rem;
   height: ${DRAG_SIZE}rem;
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
-
+  z-index: 3;
   /* В момент перетаскиывания скрываем элемент */
   visibility: ${(props) => (props.isDragging ? "hidden" : "visible")};
 `;
@@ -80,6 +79,7 @@ export const ItemDragWrapper = styled(DNDItem)<{isDragging: boolean}>`
 export const ItemDropWrapper = styled(DNDItem)`
   width: ${DROP_WIDTH}rem;
   height: ${DROP_HEIGHT}rem;
+  z-index: 2;
 `;
 export const ShelfWrapper = styled(DNDItem)`
   width: 9.2rem;
@@ -111,41 +111,38 @@ export const Title = styled.div`
   position: relative;
   top: 2rem;
 `;
-export const WinWindow = styled.img`
-  width: 900px;
-`
+
 export const WinWindowWrapper = styled.div`
-  width: 1130px;
-  height: 100%;
+  width: 100%;
+  min-height: 900px;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   backdrop-filter: blur(4px);
   position: absolute;
-  z-index: 2;
+  z-index: 4;
 `
-export const Button = styled(Btn)`
+export const Button = styled(Btn)<{background: string, color: string}>`
   position: absolute;
   border-radius: 21px;
   cursor: pointer;
   border: none;
-  background-color: #2bd600;
-  color: white;
+  background-color: ${(props) => props.background};
+  color: ${(props) => props.color};
   font-weight: bold;
 `
-export const SettingsWrapper = styled.div`
+
+export const ContentWrapper = styled.div<{width: number, height: number}>`
   margin: 0 auto;
   position: relative;
   display: flex;
   justify-content: center;
-  background: url('/background-stars.jpg') no-repeat center center;
-  background-size: cover;
-  width: 1130px;
-  height: 100vh;
+  width: ${({width}) => width}px;
+  height: ${({height}) => height}px;
 `
 export const ItemsCount = styled(Slider)`
-  top: 285px;
-  left: 380px;
+  top: 147px;
+  left: 164px;
   width: 368px;
 `
 export const PickCircle = styled.span`
@@ -159,7 +156,18 @@ export const ChooseSection = styled.div<{ width: number, justifyContent: string 
     ${({ width, justifyContent }) => getSectionOptions(width, justifyContent)};
 `
 export const Values = styled(Slider)`
-  top: 453px;
-  left: 299px;
+  top: 315px;
+  left: 84px;
   width: 532px;
+`
+export const GameBackground = styled.div<{ background: string}>`
+  background: url(${({background}) => background}) no-repeat center center;
+  background-size: cover;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+`
+export const DropBoard = styled.img`
+  align-self: flex-end;
+  width: 1060px;
 `

@@ -1,6 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 import React, {createContext, useContext} from 'react';
-import {correctPositions, ItemsEnum, PositionType, ShelvesEnum} from "./constants";
+import { enableStaticRendering } from "mobx-react-lite";
+import {correctPositions, ItemsEnum, PositionType, ShelvesEnum} from "../constants";
 
 type ShelfItemType = ItemsEnum | null;
 type ShelfItemsListType = ShelfItemType[];
@@ -9,13 +10,12 @@ type ShelfItemsListType = ShelfItemType[];
 export class BottlesGameStore {
     draggedPosition: PositionType | null = null; // начальная позиция drag-элемента в момент перетаскивания
     positions: Record<ShelvesEnum, ShelfItemsListType>; // содержимое ячеек на полках
-    correctNumbers: number[] | null = null;
-    currentNumbers: number[] | null = null;
+    correctNumbers: (number|string)[] | null = null;
+    currentNumbers: (number|string)[] | null = null;
 
     constructor() {
         makeAutoObservable(this);
-        this.shuffle();
-        this.getRandomNumbers();
+        this.currentNumbers = new Array(correctPositions.length).fill(null)
     }
 
     shuffle(): void { // перемешиваем бутылки
@@ -25,16 +25,11 @@ export class BottlesGameStore {
             ),
             [ShelvesEnum.bottom]: new Array(correctPositions.length).fill(null),
         };
-        this.currentNumbers = new Array(correctPositions.length).fill(null)
         //this.isOneAtBottomCorrect && this.shuffle(); // перемешиваем еще раз, если хотя бы одна стоит на нужной позиции
     }
-    getRandomNumbers(): void {
-        this.correctNumbers = new Array(correctPositions.length)
-            .fill(null)
-            .map(() =>  Math.floor(Math.random() * 100) + 1)
-            .sort((a, b) => a - b)
 
-        console.log('correct --->',this.correctNumbers)
+    getRandomNumbers(symbols: (number | string)[]): void {
+        this.correctNumbers = symbols
     };
 
    /* get isOneAtBottomCorrect(): boolean {
@@ -59,7 +54,6 @@ export class BottlesGameStore {
         if(position[0] === 0) {
             this.currentNumbers[position[1]] = currentNumber
         };
-        console.log('current numbers --->',this.currentNumbers)
     }
 
     getItem(position: PositionType): ShelfItemType {
@@ -92,13 +86,8 @@ export class BottlesGameStore {
             this.positions[ShelvesEnum.bottom].every((position) => position !== null)
         );
     }
+    hydrate(data) {
+        if (!data) return;
+       //использовать, если буду фетчить дату с сервера
+    };
 }
-export const BottlesGameContext = createContext<BottlesGameStore | null>(null);
-
-export const useStore = <T>(context: React.Context<T | null>): T => {
-    const data = useContext(context);
-    if (!data) {
-        throw new Error("Using store outside of context");
-    }
-    return data;
-};

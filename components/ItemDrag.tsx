@@ -2,7 +2,7 @@ import * as React from "react";
 import { observer } from "mobx-react-lite";
 import { useDrag } from "react-dnd";
 
-import { BottlesGameContext, useStore } from "../store";
+import { useStore } from "../store";
 
 import {ItemType, ItemTypes, PositionType} from "../constants";
 import { ITEM_DND_TYPE } from "../constants";
@@ -11,14 +11,14 @@ import {Dispatch, useEffect, useState} from "react";
 import Item from "../components/Item";
 
 type ItemDragProps = {
-    item: ItemType;
-    position: PositionType;
-    number: number
+    item: ItemType
+    position: PositionType
+    number: string|number
 };
 
 const ItemDrag: React.FC<ItemDragProps> = ({item, position, number, }: ItemDragProps) => {
-    const store = useStore(BottlesGameContext);
-    const [num, setNumber] = useState<number | null>(null)
+    const store = useStore();
+    const [num, setNumber] = useState<(number|string) | null>(null)
     const [img, setImage] = useState<string>("/images/coockie_1.svg")
 
     const [{isDragging}, drag, preview] = useDrag(() => ({
