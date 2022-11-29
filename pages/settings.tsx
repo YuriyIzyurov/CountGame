@@ -6,10 +6,11 @@ import {
     ItemsCount,
     PickCircle,
     ContentWrapper,
-    Values
+    Values, ChooseField
 } from "../styles/styles";
 import {useStore} from "../store";
 import {useRouter} from "next/router";
+import {Backgrounds} from "../constants";
 
 
 
@@ -17,6 +18,10 @@ const Settings = () => {
     const [itemsCount, setItemsCount] = useState<number>(2)
     const [values, setValues] = useState<number>(0)
     const [isIncrease, setIsIncrease] = useState<boolean>(true)
+    const [isRandom, setIsRandom] = useState<boolean>(true)
+    const [background, setBackground] = useState<number>(3)
+    const [error, setError] = useState<boolean>(false)
+
     const store = useStore()
     const router = useRouter()
 
@@ -45,12 +50,31 @@ const Settings = () => {
     }
 
     const setOptionsAndStartGame = () => {
+        if(!isRandom && background === 3) {
+            setError(true)
+            return
+        }
         const array = generateRandomSymbols(values, isIncrease)
         store.shuffle()
         store.getRandomNumbers(array)
+        store.setDirection(isIncrease)
+        store.setBackground(generateBackground(background, isRandom))
         redirect()
     }
     const redirect = () => router.push('/Board')
+    const setRandomField = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setIsRandom(e.currentTarget.checked)
+    }
+    const changeBackground = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setBackground(+e.target.value)
+    }
+    const generateBackground = (background: number, isRandom: boolean) => {
+        if (isRandom) {
+            return Math.floor(Math.random() * 3)
+        } else if(background === 3) {
+            setError(true)
+        } else return background
+    }
 
     const setSelectorsOptions = (index: number, arr: unknown[]): Array<number | string> => {
         let width
@@ -73,7 +97,7 @@ const Settings = () => {
         return [width, justifyContent, value]
     }
     return (
-        <GameBackground background={'background-stars.jpg'}>
+        <GameBackground background={'backgrounds/background-stars.jpg'}>
           <ContentWrapper width={700} height={661}>
             <img style={{width: '700px'}} src={'/settings_window.svg'} alt={'settings'}/>
             <ItemsCount>
@@ -102,9 +126,40 @@ const Settings = () => {
                     </ChooseSection>
                 })}
             </Values>
-            <Button style={{opacity: !isIncrease ? '0.5' : '1'}} onClick={() => setIsIncrease(true)} position={[400,75]} size={[260,55,28]} background={'#ffd748'} color={' #423f45'}>По возрастанию</Button>
-            <Button style={{opacity: isIncrease ? '0.5' : '1'}} onClick={() => setIsIncrease(false)} position={[400,363]} size={[260,55,28]} background={'#ffd748'} color={' #423f45'}>По убыванию</Button>
-            <Button position={[549,210]} size={[279,63,31]} background={'#2bd600'} color={'white'} onClick={setOptionsAndStartGame}>Играть</Button>
+            <Button
+                style={{opacity: !isIncrease ? '0.5' : '1'}}
+                onClick={() => setIsIncrease(true)}
+                position={[400,75]}
+                size={[260,55,28]}
+                background={'#ffd748'}
+                color={' #423f45'}>По возрастанию</Button>
+            <Button
+                style={{opacity: isIncrease ? '0.5' : '1'}}
+                onClick={() => setIsIncrease(false)}
+                position={[400,363]} size={[260,55,28]}
+                background={'#ffd748'}
+                color={' #423f45'}>По убыванию</Button>
+            <ChooseField>
+                <div>
+                    <input type="checkbox" id="random" checked={isRandom} onChange={setRandomField}/>
+                    <label htmlFor="random">Случайная тема</label>
+                </div>
+                <h1>{background}</h1>
+                <select disabled={isRandom} value={background} onChange={changeBackground}>
+                    <option disabled value={3}>Выберите тему</option>
+                    <option value={Backgrounds.cookie}>Сладости</option>
+                    <option value={Backgrounds.coin}>Монетки</option>
+                    <option value={Backgrounds.winter}>Новый Год</option>
+                </select>
+                {error && <a style={{color: 'red'}}>Выберите тему!</a>}
+            </ChooseField>
+            <Button
+                position={[549,210]}
+                size={[279,63,31]}
+                background={'#2bd600'}
+                color={'white'}
+                onClick={setOptionsAndStartGame}
+            >Играть</Button>
           </ContentWrapper>
         </GameBackground>
     );

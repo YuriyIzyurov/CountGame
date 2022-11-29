@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import shelf from 'public/images/shelf.svg'
 import win from 'public/images/win_window.svg'
 import ItemDrag from "../components/ItemDrag";
-import {items, ShelvesEnum} from "../constants";
+import {Backgrounds, items, ShelvesEnum} from "../constants";
 import ItemDrop from "../components/ItemDrop";
 import { useStore } from "../store";
 import { observer } from 'mobx-react-lite';
@@ -10,20 +10,28 @@ import {
     Button,
     ShelfWrapper,
     ContentWrapper,
-    WinWindow,
     WinWindowWrapper,
     GameBackground,
-    DropBoard
+    DropBoard, ValuesDirection
 } from "../styles/styles";
 import {useRouter} from "next/router";
 
 const Playground: React.FC = () => {
     const store = useStore()
     const router = useRouter()
-    const redirect = () => router.push('/settings')
+
+    const path = {
+        background: `backgrounds/${Backgrounds[store.background]}_background-empty.jpg`,
+        dropBoard: `boards/${Backgrounds[store.background]}-drop.svg`
+    }
+
+    const redirect = () => {
+        store.refreshCurrentNumbers()
+        return router.push('/settings')
+    }
 
     return (
-        <GameBackground background={'coockie_background-empty.jpg'}>
+        <GameBackground background={path.background}>
             {store.isCorrect && (
                 <WinWindowWrapper>
                     <div style={{position:'relative'}}>
@@ -63,7 +71,10 @@ const Playground: React.FC = () => {
                         <ItemDrop position={[ShelvesEnum.bottom, Number(columnIndex)]} />
                     </div>
                 ))}
-                <DropBoard src={'boards/candy-drop.svg'} alt={'drop-board'}/>
+                <ValuesDirection
+                    src={store.increase ? 'direction/increase.png' : 'direction/decrease.png'}
+                    $direction={store.increase} alt={'inc'}/>
+                <DropBoard src={path.dropBoard} alt={'drop-board'}/>
             </ContentWrapper>
         </GameBackground>
     );

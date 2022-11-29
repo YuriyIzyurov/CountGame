@@ -4,7 +4,7 @@ import { useDrag } from "react-dnd";
 
 import { useStore } from "../store";
 
-import {ItemType, ItemTypes, PositionType} from "../constants";
+import {Coins, Cookies, ItemType, ItemTypes, PositionType, Toys} from "../constants";
 import { ITEM_DND_TYPE } from "../constants";
 import {ItemDragWrapper, NumberWrapper} from "../styles/styles";
 import {Dispatch, useEffect, useState} from "react";
@@ -18,8 +18,16 @@ type ItemDragProps = {
 
 const ItemDrag: React.FC<ItemDragProps> = ({item, position, number, }: ItemDragProps) => {
     const store = useStore();
-    const [num, setNumber] = useState<(number|string) | null>(null)
-    const [img, setImage] = useState<string>("/images/coockie_1.svg")
+
+
+    const chooseImage = (background: number)  => {
+        switch (background) {
+            case 0: return Cookies
+            case 1: return Coins
+            case 2: return Toys
+        }
+    }
+    let Items = chooseImage(store.background)
 
     const [{isDragging}, drag, preview] = useDrag(() => ({
         type: ItemTypes.ITEM,
@@ -35,22 +43,17 @@ const ItemDrag: React.FC<ItemDragProps> = ({item, position, number, }: ItemDragP
 
    const dragRef = (drag as unknown) as React.RefObject<HTMLDivElement>;
 
-    useEffect(() => {
-        setNumber(number)
-        setImage(item.image)
-    },[])
 
     return (
         <div>
             <ItemDragWrapper
                 ref={dragRef}
                 position={position}
-                isDragging={isDragging}
                 style={{
-                    backgroundImage: `url(${img})`
+                    backgroundImage: `url("/images/${Items[item.id]}")`
                 }}
             >
-                {num && <NumberWrapper data-text={num}>{num}</NumberWrapper>}
+                <NumberWrapper data-text={number} correctionY={store.background === 2}>{number}</NumberWrapper>
             </ItemDragWrapper>
 
         </div>

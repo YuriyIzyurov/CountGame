@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 import React, {createContext, useContext} from 'react';
 import { enableStaticRendering } from "mobx-react-lite";
-import {correctPositions, ItemsEnum, PositionType, ShelvesEnum} from "../constants";
+import {Backgrounds, correctPositions, ItemsEnum, PositionType, ShelvesEnum} from "../constants";
 
 type ShelfItemType = ItemsEnum | null;
 type ShelfItemsListType = ShelfItemType[];
@@ -12,6 +12,8 @@ export class BottlesGameStore {
     positions: Record<ShelvesEnum, ShelfItemsListType>; // содержимое ячеек на полках
     correctNumbers: (number|string)[] | null = null;
     currentNumbers: (number|string)[] | null = null;
+    increase: boolean | null = null;
+    background: Backgrounds | null = null;
 
     constructor() {
         makeAutoObservable(this);
@@ -66,6 +68,15 @@ export class BottlesGameStore {
         this.positions[shelfIndex][columnIndex] = item;
     }
 
+    setDirection(isInc: boolean) {
+        this.increase = isInc
+    }
+    setBackground(background: Backgrounds) {
+        this.background = background
+    }
+    refreshCurrentNumbers() {
+        this.currentNumbers = new Array(correctPositions.length).fill(null)
+    }
     get positionKeys(): string[] {
         return Object.keys(this.positions);
     }
@@ -79,7 +90,6 @@ export class BottlesGameStore {
             JSON.stringify(this.currentNumbers) // элегантный способ 🤨
         );
     }
-
     get isUncorrect(): boolean { // проверяем, что верхняя полка заполнена, но позиции не верны
         return (
             !this.isCorrect &&

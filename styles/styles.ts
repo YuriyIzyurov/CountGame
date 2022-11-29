@@ -65,15 +65,18 @@ const Slider = styled.div`
   height: 20px;
   background: transparent;
 `
-export const ItemDragWrapper = styled(DNDItem)<{isDragging: boolean}>`
+export const ItemDragWrapper = styled(DNDItem)<{isDragging?: boolean}>`
   width: ${DRAG_SIZE}rem;
   height: ${DRAG_SIZE}rem;
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
   z-index: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   /* В момент перетаскиывания скрываем элемент */
-  visibility: ${(props) => (props.isDragging ? "hidden" : "visible")};
+  //visibility: ${(props) => (props.isDragging ? "hidden" : "visible")};
 `;
 
 export const ItemDropWrapper = styled(DNDItem)`
@@ -85,20 +88,18 @@ export const ShelfWrapper = styled(DNDItem)`
   width: 9.2rem;
   height: 1.95rem;
 `;
-export const NumberWrapper = styled.div`
+export const NumberWrapper = styled.div<{correctionY: boolean}>`
   position: absolute;
   color: white;
-  padding-left: .2em;
+  padding-bottom: ${({correctionY}) => .25 + (correctionY && -0.25)}em;
+  padding-top: ${({correctionY}) => correctionY && .5}em;
   font-size: 65px;
   z-index: 1;
-  top: 30px;
-  left: 30px;
   &:before {
     content: attr(data-text);
     position: absolute;
     left: 0;
     right: 0;
-    padding-left: .2em;
     -webkit-text-stroke: .17em #242546;
     z-index: -1;
   }
@@ -136,7 +137,8 @@ export const ContentWrapper = styled.div<{width: number, height: number}>`
   margin: 0 auto;
   position: relative;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-end;
   width: ${({width}) => width}px;
   height: ${({height}) => height}px;
 `
@@ -170,4 +172,18 @@ export const GameBackground = styled.div<{ background: string}>`
 export const DropBoard = styled.img`
   align-self: flex-end;
   width: 1060px;
+`
+export const ValuesDirection = styled.img<{direction: boolean}>`
+  height: 69px;
+  width: 358px;
+  margin-bottom: 10px;
+  align-self: ${({direction}) => direction ? 'flex-start' : 'flex-end'};
+`
+export const ChooseField = styled.div`
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  bottom: 144px;
+  left: 164px;
+  width: 368px;
 `

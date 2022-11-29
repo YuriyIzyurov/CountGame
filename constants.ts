@@ -34,25 +34,51 @@ export type ItemGlyphType = {
 export const items: Record<ItemsEnum, ItemType> = {
     [ItemsEnum.first]: {
         id: ItemsEnum.first,
-        image: "/images/coockie_1.svg"
+        image: "/images/"
     },
     [ItemsEnum.second]: {
         id: ItemsEnum.second,
-        image: "/images/coockie_3.svg"
+        image: "/images/"
     },
     [ItemsEnum.third]: {
         id: ItemsEnum.third,
-        image: "/images/coockie_5.svg"
+        image: "/images/"
     },
     [ItemsEnum.fourth]: {
         id: ItemsEnum.fourth,
-        image: "/images/coockie_2.svg"
+        image: "/images/"
     },
     [ItemsEnum.fifth]: {
         id: ItemsEnum.fifth,
-        image: "/images/coockie_3.svg"
+        image: "/images/"
     }
 };
+export enum Backgrounds {
+    cookie,
+    coin,
+    winter
+}
+export enum Cookies {
+    'cookie_1.svg',
+    'cookie_2.svg',
+    'cookie_3.svg',
+    'cookie_4.svg',
+    'cookie_5.svg',
+}
+export enum Coins {
+    'coin_1.svg',
+    'coin_2.svg',
+    'coin_3.svg',
+    'coin_4.svg',
+    'coin_5.svg',
+}
+export enum Toys {
+    'toy_1.svg',
+    'toy_2.svg',
+    'toy_3.svg',
+    'toy_4.svg',
+    'toy_5.svg',
+}
 export const ItemTypes = {
     ITEM: 'item'
 }

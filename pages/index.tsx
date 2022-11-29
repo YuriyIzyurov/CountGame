@@ -5,7 +5,7 @@ import {GameBackground} from "../styles/styles";
 const Index = () => {
 
     return (
-        <GameBackground background={'coockie_background-empty.jpg'}>
+        <GameBackground background={'backgrounds/cookie_background-empty.jpg'}>
             <div className='navbar'>
                 <A href={'/'} text='Main'/>
                 <A href={'/Board'} text='Board'/>
