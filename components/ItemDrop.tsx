@@ -14,12 +14,14 @@ type ItemDropProps = {
 
 const ItemDrop: React.FC<ItemDropProps> = ({position}: ItemDropProps) => {
     const store = useStore();
+    const audio = position[0] === 1 ? new Audio('sounds/coin-onShelf.mp3') : new Audio('sounds/coin-drop.mp3')
 
     const [, drop] = useDrop({
         accept: ItemTypes.ITEM,
         drop: (item, monitor) => {
             const glyph = item as ItemGlyphType;
             store.onDrop(glyph.id, glyph.number, position);
+            audio.play()
         }
     });
 

@@ -6,7 +6,7 @@ import {
     ItemsCount,
     PickCircle,
     ContentWrapper,
-    Values, ChooseField
+    Values, ChooseField, CustomCheckbox, CustomSelect, ErrorMessage
 } from "../styles/styles";
 import {useStore} from "../store";
 import {useRouter} from "next/router";
@@ -52,6 +52,7 @@ const Settings = () => {
     const setOptionsAndStartGame = () => {
         if(!isRandom && background === 3) {
             setError(true)
+            setTimeout(() => setError(false), 1000)
             return
         }
         const array = generateRandomSymbols(values, isIncrease)
@@ -64,6 +65,7 @@ const Settings = () => {
     const redirect = () => router.push('/Board')
     const setRandomField = (e: React.ChangeEvent<HTMLInputElement>) => {
         setIsRandom(e.currentTarget.checked)
+        setBackground(3)
     }
     const changeBackground = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setBackground(+e.target.value)
@@ -140,19 +142,20 @@ const Settings = () => {
                 background={'#ffd748'}
                 color={' #423f45'}>По убыванию</Button>
             <ChooseField>
-                <div>
+                <CustomCheckbox>
                     <input type="checkbox" id="random" checked={isRandom} onChange={setRandomField}/>
                     <label htmlFor="random">Случайная тема</label>
-                </div>
-                <h1>{background}</h1>
-                <select disabled={isRandom} value={background} onChange={changeBackground}>
-                    <option disabled value={3}>Выберите тему</option>
-                    <option value={Backgrounds.cookie}>Сладости</option>
-                    <option value={Backgrounds.coin}>Монетки</option>
-                    <option value={Backgrounds.winter}>Новый Год</option>
-                </select>
-                {error && <a style={{color: 'red'}}>Выберите тему!</a>}
+                </CustomCheckbox>
+                <CustomSelect>
+                    <select disabled={isRandom} value={background} onChange={changeBackground}>
+                        <option disabled value={3}>Выберите тему</option>
+                        <option value={Backgrounds.cookie}>Сладости</option>
+                        <option value={Backgrounds.coin}>Монетки</option>
+                        <option value={Backgrounds.winter}>Новый Год</option>
+                    </select>
+                </CustomSelect>
             </ChooseField>
+            {error && <ErrorMessage>Выберите тему!</ErrorMessage>}
             <Button
                 position={[549,210]}
                 size={[279,63,31]}

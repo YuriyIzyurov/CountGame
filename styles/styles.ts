@@ -183,7 +183,94 @@ export const ChooseField = styled.div`
   position: absolute;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   bottom: 144px;
-  left: 164px;
-  width: 368px;
+  left: 76px;
+  width: 546px;
+`
+export const CustomCheckbox = styled.div`
+    position: relative;
+    input {
+      -webkit-appearance: none;
+      appearance: none;
+      position: absolute;
+      &:checked + label:before {
+        border-color: #ffd748;
+      }
+      &:checked + label:after {
+        opacity: 1;
+      }
+    }
+    label {
+      padding-left: 35px;
+      font: bold 1.5rem "Arial", sans-serif;
+      color: #423f45;
+      cursor: pointer;
+      &:before {
+        content: '';
+        display: block;
+        width: 25px;
+        height: 25px;
+        border: 2px solid #423f45;
+        border-radius: 5px;
+        background-color: white;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        transition: background .1s linear, border .1s linear;
+      }
+      &:after {
+        opacity: 0;
+        content: '';
+        display: block;
+        width: 33px;
+        height: 33px;
+        background: url('/images/check.svg') no-repeat;
+        background-size:  33px 33px;
+        position: absolute;
+        top: -2px;
+        left: 1px;
+        z-index: 2;
+        transition: opacity .1s linear;
+      }
+    }
+`
+export const CustomSelect = styled.div`
+  position: relative;
+  &:after {
+    content: '';
+    display: block;
+    border-style: solid;
+    border-width: 6px 5px 0 5px;
+    border-color: #000 transparent transparent transparent;
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    margin-top: -3px;
+    z-index: 1;
+  }
+  select {
+    cursor: pointer;
+    background: none;
+    padding: 0.25rem 2.5rem 0.25rem 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    -webkit-appearance: none;
+    appearance: none;
+    font: bold 1.5rem "Arial", sans-serif;
+    color: #423f45;
+    &:focus {
+      outline: 0;
+      border-color: #ffd748;
+    }
+   }
+`
+export const ErrorMessage = styled.div`
+    position: absolute;
+    color: red;
+    font: bold 1.2rem "Arial", sans-serif;
+    bottom: 117px;
+    left: 273px;
 `
