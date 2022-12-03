@@ -9,12 +9,13 @@ import { ItemDropWrapper } from "../styles/styles";
 import {Dispatch} from "react";
 
 type ItemDropProps = {
-    position: PositionType;
+    position: PositionType
+    audio: HTMLAudioElement
 };
 
-const ItemDrop: React.FC<ItemDropProps> = ({position}: ItemDropProps) => {
+const ItemDrop: React.FC<ItemDropProps> = ({position, audio}) => {
     const store = useStore();
-    const audio = position[0] === 1 ? new Audio('sounds/coin-onShelf.mp3') : new Audio('sounds/coin-drop.mp3')
+
 
     const [, drop] = useDrop({
         accept: ItemTypes.ITEM,

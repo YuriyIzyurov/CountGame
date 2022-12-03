@@ -20,18 +20,24 @@ const Playground: React.FC = () => {
     const store = useStore()
     const router = useRouter()
 
-    const path = {
-        background: `backgrounds/${Backgrounds[store.background]}_background-empty.jpg`,
-        dropBoard: `boards/${Backgrounds[store.background]}-drop.svg`
+    const background = Backgrounds[store.background]
+
+    const alias = {
+        background: `backgrounds/${background}_background-empty.jpg`,
+        dropBoard: `boards/${background}-drop.svg`,
+        audioShelf: `sounds/${background}-onShelf.mp3`,
+        audioDrop: `sounds/${background}-drop.mp3`
+
     }
 
     const redirect = () => {
         store.refreshCurrentNumbers()
         return router.push('/settings')
     }
+    const audio = (path: string): HTMLAudioElement => new Audio(path)
 
     return (
-        <GameBackground background={path.background}>
+        <GameBackground background={alias.background}>
             {store.isCorrect && (
                 <WinWindowWrapper>
                     <div style={{position:'relative'}}>
@@ -67,14 +73,20 @@ const Playground: React.FC = () => {
                 {Object.keys(items).map((columnIndex) => (
                     <div key={`itemPlaceholder-${columnIndex}`}>
                         <ShelfWrapper position={[ShelvesEnum.top, Number(columnIndex)]} shelf style={{backgroundImage: `url(/images/shelf.svg)`}}/>
-                        <ItemDrop position={[ShelvesEnum.top, Number(columnIndex)]} />
-                        <ItemDrop position={[ShelvesEnum.bottom, Number(columnIndex)]} />
+                        <ItemDrop
+                            position={[ShelvesEnum.top, Number(columnIndex)]}
+                            audio={audio(alias.audioShelf)}
+                        />
+                        <ItemDrop
+                            position={[ShelvesEnum.bottom, Number(columnIndex)]}
+                            audio={audio(alias.audioDrop)}
+                        />
                     </div>
                 ))}
                 <ValuesDirection
                     src={store.increase ? 'direction/increase.png' : 'direction/decrease.png'}
                     $direction={store.increase} alt={'inc'}/>
-                <DropBoard src={path.dropBoard} alt={'drop-board'}/>
+                <DropBoard src={alias.dropBoard} alt={'drop-board'}/>
             </ContentWrapper>
         </GameBackground>
     );

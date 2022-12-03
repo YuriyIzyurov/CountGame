@@ -16,7 +16,7 @@ type ItemDragProps = {
     number: string|number
 };
 
-const ItemDrag: React.FC<ItemDragProps> = ({item, position, number, }: ItemDragProps) => {
+const ItemDrag: React.FC<ItemDragProps> = ({item, position, number}: ItemDragProps) => {
     const store = useStore();
 
 
