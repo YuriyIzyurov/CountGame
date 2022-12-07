@@ -1,6 +1,4 @@
-import React, {useState} from 'react';
-import shelf from 'public/images/shelf.svg'
-import win from 'public/images/win_window.svg'
+import React, {useEffect} from 'react';
 import ItemDrag from "../components/ItemDrag";
 import {Backgrounds, items, ShelvesEnum} from "../constants";
 import ItemDrop from "../components/ItemDrop";
@@ -27,12 +25,32 @@ const Playground: React.FC = () => {
         dropBoard: `boards/${background}-drop.svg`,
         audioShelf: `sounds/${background}-onShelf.mp3`,
         audioDrop: `sounds/${background}-drop.mp3`
-
     }
+
+    useEffect(() => {
+        const audioWin = new Audio('sounds/win.mp3')
+        if(store.isCorrect) audioWin.play()
+    }, [store.isCorrect])
+
 
     const redirect = () => {
         store.refreshCurrentNumbers()
         return router.push('/settings')
+    }
+
+    const setInitialPositions = (itemIndex: number): number => {
+        let itemPosition = itemIndex
+        if(store.quantity) {
+            switch(store.quantity) {
+                case 2: itemPosition = itemIndex === 0 ? itemIndex + 1 : itemIndex + 2
+                    break
+                case 3: itemPosition =  itemIndex + 1
+                    break
+                case 4:
+                case 5: itemPosition =  itemIndex
+            }
+        }
+        return itemPosition
     }
     const audio = (path: string): HTMLAudioElement => new Audio(path)
 
@@ -65,27 +83,36 @@ const Playground: React.FC = () => {
                                 item={items[itemKey]}
                                 position={[shelfIndex, itemIndex]}
                                 number={store.correctNumbers[itemKey]}
-                                key={`bottle-${shelfKey}-${itemKey}`}
+                                quantity={store.quantity}
+                                key={`item-${shelfKey}-${itemKey}`}
                             />
                         );
                     })
                 )}
                 {Object.keys(items).map((columnIndex) => (
                     <div key={`itemPlaceholder-${columnIndex}`}>
-                        <ShelfWrapper position={[ShelvesEnum.top, Number(columnIndex)]} shelf style={{backgroundImage: `url(/images/shelf.svg)`}}/>
-                        <ItemDrop
-                            position={[ShelvesEnum.top, Number(columnIndex)]}
-                            audio={audio(alias.audioShelf)}
+                        <ShelfWrapper
+                            position={[ShelvesEnum.top, +columnIndex]}
+                            background={background}
+                            isEmpty={+columnIndex+1 > store.quantity}
+                            quantity={store.quantity}
                         />
                         <ItemDrop
-                            position={[ShelvesEnum.bottom, Number(columnIndex)]}
+                            position={[ShelvesEnum.top, +columnIndex]}
+                            audio={audio(alias.audioShelf)}
+                            isEmpty={+columnIndex+1 > store.quantity}
+                            quantity={store.quantity}
+                        />
+                        <ItemDrop
+                            position={[ShelvesEnum.bottom, +columnIndex]}
                             audio={audio(alias.audioDrop)}
                         />
                     </div>
                 ))}
                 <ValuesDirection
                     src={store.increase ? 'direction/increase.png' : 'direction/decrease.png'}
-                    $direction={store.increase} alt={'inc'}/>
+                    style={{alignSelf: store.increase ? 'flex-start' : 'flex-end'}}
+                    alt={'inc'}/>
                 <DropBoard src={alias.dropBoard} alt={'drop-board'}/>
             </ContentWrapper>
         </GameBackground>

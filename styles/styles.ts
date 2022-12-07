@@ -6,7 +6,7 @@ export const SHELF_GAP_V = 15; // ▀↕️▄ вертикальный отст
 const SHELF_START_H = 8.1; // горизонтальный отступ между началом полки и первой ячейкой
 const DROP_WIDTH = 9.8; // ширина ячейки на полке
 const DROP_HEIGHT = 11; // высота ячейки на полке
-const DRAG_SIZE = 9.8; // ширина/высота draggable бутылки
+const DRAG_SIZE = 9.8; // ширина/высота draggable штуки
 
 
 const getShelfItemPositionStyle = ([top, left]: PositionType) => `
@@ -20,9 +20,11 @@ const getButtonPosition = (position: number[], size: number[]) => `
     left: ${position[1]}px;
     font-size: ${size[2]}px;
 `;
-const getTopShelfItemPositionsStyle = ([top, left]: PositionType, shelf: boolean = null) => {
+const getTopShelfItemPositionsStyle = ([top, left]: PositionType, background: string = null, quantity: number | null) => {
     let coordinates
-    let shelfGap = 0
+    let shelfGapY = 0
+    let shelfGapX = 0
+    let quantityOffset = 0
     switch (left) {
         case 0: coordinates = [9, left * (DROP_WIDTH + 2) + 8]
             break
@@ -34,10 +36,20 @@ const getTopShelfItemPositionsStyle = ([top, left]: PositionType, shelf: boolean
             break
         case 4: coordinates = [9, left * (DROP_WIDTH + 1.8) + 8]
     }
-    if(shelf) shelfGap = 9.8
+    if(background) {
+        if(background === 'winter')  shelfGapY = -3, shelfGapX = 5
+        else shelfGapY = 9.8
+    }
+    if(quantity)
+        quantityOffset =
+            quantity === 2 ? 14
+                : quantity === 3 ? 9
+                    : quantity === 4 ? 3
+                        : 0
+
     return `
-        top: ${coordinates[0] + shelfGap}rem;
-        left: ${coordinates[1]}rem;
+        top: ${coordinates[0] + shelfGapY}rem;
+        left: ${coordinates[1] + shelfGapX + quantityOffset}rem;
     `
 }
 const getSectionOptions = (width: number, justifyContent: string) => `
@@ -45,11 +57,12 @@ const getSectionOptions = (width: number, justifyContent: string) => `
     justify-content: ${justifyContent}
 `;
 export const DNDItem = styled.div<{
-    position: PositionType;
-    shelf: boolean | null;
+    position: PositionType
+    background: string | null
+    quantity?: number | null
 }>`
-  ${({ position, shelf = null }) => {
-      return position[0] === 0 ? getShelfItemPositionStyle(position) : getTopShelfItemPositionsStyle(position, shelf)
+  ${({ position, background = null, quantity }) => {
+      return position[0] === 0 ? getShelfItemPositionStyle(position) : getTopShelfItemPositionsStyle(position, background, quantity)
   }}
   position: absolute;
 `;
@@ -65,7 +78,7 @@ const Slider = styled.div`
   height: 20px;
   background: transparent;
 `
-export const ItemDragWrapper = styled(DNDItem)<{isDragging?: boolean}>`
+export const ItemDragWrapper = styled(DNDItem)`
   width: ${DRAG_SIZE}rem;
   height: ${DRAG_SIZE}rem;
   background-repeat: no-repeat;
@@ -75,8 +88,6 @@ export const ItemDragWrapper = styled(DNDItem)<{isDragging?: boolean}>`
   display: flex;
   justify-content: center;
   align-items: center;
-  /* В момент перетаскиывания скрываем элемент */
-  //visibility: ${(props) => (props.isDragging ? "hidden" : "visible")};
 `;
 
 export const ItemDropWrapper = styled(DNDItem)`
@@ -84,9 +95,16 @@ export const ItemDropWrapper = styled(DNDItem)`
   height: ${DROP_HEIGHT}rem;
   z-index: 2;
 `;
-export const ShelfWrapper = styled(DNDItem)`
-  width: 9.2rem;
-  height: 1.95rem;
+export const ShelfWrapper = styled(DNDItem)<{background: string, quantity: number, isEmpty: boolean}>`
+  ${({background, isEmpty}) => {
+    if(isEmpty) return null  
+    const shelfParams =  background === 'winter' ? ['branchShelf', 7, 5.8] : ['shelf', 9.2, 1.95]
+    return `
+    background-image: url(/images/${shelfParams[0]}.svg);
+    width: ${shelfParams[1]}rem;
+    height: ${shelfParams[2]}rem;
+    `
+  } }
 `;
 export const NumberWrapper = styled.div<{correctionY: boolean}>`
   position: absolute;
@@ -173,11 +191,10 @@ export const DropBoard = styled.img`
   align-self: flex-end;
   width: 1060px;
 `
-export const ValuesDirection = styled.img<{direction: boolean}>`
+export const ValuesDirection = styled.img`
   height: 69px;
   width: 358px;
   margin-bottom: 10px;
-  align-self: ${({direction}) => direction ? 'flex-start' : 'flex-end'};
 `
 export const ChooseField = styled.div`
   position: absolute;

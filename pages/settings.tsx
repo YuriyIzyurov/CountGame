@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {Dispatch, useEffect, useState} from 'react';
 import {
     Button,
     ChooseSection,
@@ -15,7 +15,7 @@ import {Backgrounds} from "../constants";
 
 
 const Settings = () => {
-    const [itemsCount, setItemsCount] = useState<number>(2)
+    const [itemsCount, setItemsCount] = useState<number>(5)
     const [values, setValues] = useState<number>(0)
     const [isIncrease, setIsIncrease] = useState<boolean>(true)
     const [isRandom, setIsRandom] = useState<boolean>(true)
@@ -24,6 +24,9 @@ const Settings = () => {
 
     const store = useStore()
     const router = useRouter()
+    const clickValue = new Audio('sounds/clickOption.mp3')
+    const clickOptions = new Audio('sounds/clickDirectionAndRandom.mp3')
+    const clickStart = new Audio('sounds/clickStartGame.mp3')
 
     const chooseSymbol = (values: number) => {
         return values === 0
@@ -43,7 +46,7 @@ const Settings = () => {
 
     const generateRandomSymbols = (values: number, isIncrease: boolean): (number | string)[] => {
         let set: Set<number|string> = new Set()
-        while (set.size < 5) {
+        while (set.size < itemsCount) {
             set.add(chooseSymbol(values))
         }
         return chooseDirection(values, isIncrease, set)
@@ -56,19 +59,23 @@ const Settings = () => {
             return
         }
         const array = generateRandomSymbols(values, isIncrease)
-        store.shuffle()
+        store.setQuantity(itemsCount)
         store.getRandomNumbers(array)
         store.setDirection(isIncrease)
         store.setBackground(generateBackground(background, isRandom))
+        store.shuffle()
+        clickStart.play()
         redirect()
     }
     const redirect = () => router.push('/Board')
     const setRandomField = (e: React.ChangeEvent<HTMLInputElement>) => {
         setIsRandom(e.currentTarget.checked)
         setBackground(3)
+        clickOptions.play()
     }
     const changeBackground = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setBackground(+e.target.value)
+        clickOptions.play()
     }
     const generateBackground = (background: number, isRandom: boolean) => {
         if (isRandom) {
@@ -77,7 +84,10 @@ const Settings = () => {
             setError(true)
         } else return background
     }
-
+    const clickOptionHandler = (callback: React.Dispatch<number|boolean>, value: number|boolean, audio: HTMLAudioElement) => {
+        callback(value)
+        audio.play()
+    }
     const setSelectorsOptions = (index: number, arr: unknown[]): Array<number | string> => {
         let width
         let value
@@ -101,7 +111,7 @@ const Settings = () => {
     return (
         <GameBackground background={'backgrounds/background-stars.jpg'}>
           <ContentWrapper width={700} height={661}>
-            <img style={{width: '700px'}} src={'/settings_window.svg'} alt={'settings'}/>
+            <img style={{width: '700px'}} src={'backgrounds/settings_window.svg'} alt={'settings'}/>
             <ItemsCount>
                 {Array.from({length: 4}).map((item, index, arr) => {
                     const [width, justifyContent, itemCount] = setSelectorsOptions(index, arr)
@@ -109,7 +119,7 @@ const Settings = () => {
                         key={index}
                         width={width}
                         justifyContent={justifyContent}
-                        onClick={() => setItemsCount(itemCount as number)}
+                        onClick={() => clickOptionHandler(setItemsCount as React.Dispatch<number>, itemCount as number, clickValue)}
                     >
                         {itemsCount === itemCount && <PickCircle/>}
                     </ChooseSection>
@@ -122,7 +132,7 @@ const Settings = () => {
                         key={index}
                         width={width}
                         justifyContent={justifyContent}
-                        onClick={() => setValues(value as number)}
+                        onClick={() => clickOptionHandler(setValues as React.Dispatch<number>, value as number, clickValue)}
                     >
                         {values === value && <PickCircle/>}
                     </ChooseSection>
@@ -130,14 +140,14 @@ const Settings = () => {
             </Values>
             <Button
                 style={{opacity: !isIncrease ? '0.5' : '1'}}
-                onClick={() => setIsIncrease(true)}
+                onClick={() => clickOptionHandler(setIsIncrease as React.Dispatch<boolean>, true, clickOptions)}
                 position={[400,75]}
                 size={[260,55,28]}
                 background={'#ffd748'}
                 color={' #423f45'}>По возрастанию</Button>
             <Button
                 style={{opacity: isIncrease ? '0.5' : '1'}}
-                onClick={() => setIsIncrease(false)}
+                onClick={() => clickOptionHandler(setIsIncrease as React.Dispatch<boolean>, false, clickOptions)}
                 position={[400,363]} size={[260,55,28]}
                 background={'#ffd748'}
                 color={' #423f45'}>По убыванию</Button>

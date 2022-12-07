@@ -22,10 +22,7 @@ export const correctPositions = [
     ItemsEnum.fifth
 ];
 export const ITEM_DND_TYPE = "ITEM_DND_TYPE";
-/*export type ItemGlyphType = {
-    type: string;
-    item: ItemType;
-};*/
+
 export type ItemGlyphType = {
     id: number
     number: number

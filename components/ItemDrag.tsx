@@ -14,9 +14,10 @@ type ItemDragProps = {
     item: ItemType
     position: PositionType
     number: string|number
+    quantity: number
 };
 
-const ItemDrag: React.FC<ItemDragProps> = ({item, position, number}: ItemDragProps) => {
+const ItemDrag: React.FC<ItemDragProps> = ({item, position, number, quantity}: ItemDragProps) => {
     const store = useStore();
 
 
@@ -49,11 +50,14 @@ const ItemDrag: React.FC<ItemDragProps> = ({item, position, number}: ItemDragPro
             <ItemDragWrapper
                 ref={dragRef}
                 position={position}
+                quantity={quantity}
                 style={{
                     backgroundImage: `url("/images/${Items[item.id]}")`
                 }}
             >
-                <NumberWrapper data-text={number} correctionY={store.background === 2}>{number}</NumberWrapper>
+                <NumberWrapper data-text={number} correctionY={store.background === 2}>
+                    {number}
+                </NumberWrapper>
             </ItemDragWrapper>
 
         </div>

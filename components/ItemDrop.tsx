@@ -11,9 +11,11 @@ import {Dispatch} from "react";
 type ItemDropProps = {
     position: PositionType
     audio: HTMLAudioElement
+    isEmpty?: boolean
+    quantity?: number
 };
 
-const ItemDrop: React.FC<ItemDropProps> = ({position, audio}) => {
+const ItemDrop: React.FC<ItemDropProps> = ({position, audio, isEmpty, quantity}) => {
     const store = useStore();
 
 
@@ -28,7 +30,8 @@ const ItemDrop: React.FC<ItemDropProps> = ({position, audio}) => {
 
     const dropRef = (drop as unknown) as React.RefObject<HTMLDivElement>;
 
-    return <ItemDropWrapper position={position} ref={dropRef} />;
+    if(isEmpty) return null
+    return <ItemDropWrapper position={position} ref={dropRef} quantity={quantity}/>;
 };
 
 export default observer(ItemDrop);

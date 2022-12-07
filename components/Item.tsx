@@ -1,9 +1,7 @@
 import React from 'react';
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
-import { useDrag } from 'react-dnd';
-import {ItemTypes} from "../constants";
-import {BottlesGameContext, useStore} from "store/store";
+
 
 const Item = ({children, number, position}) => {
 

@@ -1,37 +1,29 @@
 import {enableStaticRendering} from "mobx-react-lite";
-import {BottlesGameStore} from "../store/store";
+import {NumbersGameStore} from "../store/store";
 import React, {createContext, useContext} from "react";
 
 enableStaticRendering(typeof window === "undefined");
 
-let clientStore: BottlesGameStore;
+let clientStore: NumbersGameStore;
 
-export const BottlesGameContext = createContext<BottlesGameStore | null>(null);
-BottlesGameContext.displayName = "BottlesGameContext"
+export const NumbersGameContext = createContext<NumbersGameStore | null>(null);
+NumbersGameContext.displayName = "NumbersGameContext"
 
 export const useStore = () => {
-    const data = useContext(BottlesGameContext);
+    const data = useContext(NumbersGameContext);
     if (!data) {
         throw new Error("Using store outside of context");
     }
     return data;
 };
 
-
-/*export const useStore = <T>(context: React.Context<T | null>): T => {
-    const data = useContext(context);
-    if (!data) {
-        throw new Error("Using store outside of context");
-    }
-    return data;
-};*/
 export const StoreProvider = ({children}) => {
     const store = initStore()
-    return <BottlesGameContext.Provider value={store}>{children}</BottlesGameContext.Provider>
+    return <NumbersGameContext.Provider value={store}>{children}</NumbersGameContext.Provider>
 }
 
 const initStore = (initData = null) => {
-    const store = clientStore ?? new BottlesGameStore();
+    const store = clientStore ?? new NumbersGameStore();
     if (initData) store.hydrate(initData);
 
     if (typeof window === "undefined") return store;
