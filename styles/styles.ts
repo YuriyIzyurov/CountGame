@@ -7,6 +7,7 @@ const SHELF_START_H = 8.1; // горизонтальный отступ межд
 const DROP_WIDTH = 9.8; // ширина ячейки на полке
 const DROP_HEIGHT = 11; // высота ячейки на полке
 const DRAG_SIZE = 9.8; // ширина/высота draggable штуки
+const GAP = 8; // расстояние между драг элементами
 
 
 const getShelfItemPositionStyle = ([top, left]: PositionType) => `
@@ -25,20 +26,22 @@ const getTopShelfItemPositionsStyle = ([top, left]: PositionType, background: st
     let shelfGapY = 0
     let shelfGapX = 0
     let quantityOffset = 0
+    let flowerGAP = background === 'flower'
     switch (left) {
-        case 0: coordinates = [9, left * (DROP_WIDTH + 2) + 8]
+        case 0: coordinates = [9, left * (DROP_WIDTH + 2) + (flowerGAP ? 8.5 : GAP)]
             break
-        case 1: coordinates = [2, left * (DROP_WIDTH + 2.7) + 8]
+        case 1: coordinates = [2, left * (DROP_WIDTH + 2.7) + (flowerGAP ? 6.8 : GAP)]
             break
-        case 2: coordinates = [12, left * (DROP_WIDTH + 1.8) + 8]
+        case 2: coordinates = [12, left * (DROP_WIDTH + 1.8) + (flowerGAP ? 6.5 : GAP)]
             break
-        case 3: coordinates = [2, left * (DROP_WIDTH + 1.8) + 8]
+        case 3: coordinates = [2, left * (DROP_WIDTH + 1.8) + (flowerGAP ? 3 : GAP)]
             break
-        case 4: coordinates = [9, left * (DROP_WIDTH + 1.8) + 8]
+        case 4: coordinates = [9, left * (DROP_WIDTH + 1.8) + (flowerGAP ? -4 : GAP)]
     }
     if(background) {
         if(background === 'winter')  shelfGapY = -3, shelfGapX = 5
-        else shelfGapY = 9.8
+        else if(background === 'flower') shelfGapY = 8, shelfGapX = 7
+            else shelfGapY = 9.8
     }
     if(quantity)
         quantityOffset =
@@ -84,7 +87,7 @@ export const ItemDragWrapper = styled(DNDItem)`
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
-  z-index: 3;
+  z-index: 3; 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -93,16 +96,35 @@ export const ItemDragWrapper = styled(DNDItem)`
 export const ItemDropWrapper = styled(DNDItem)`
   width: ${DROP_WIDTH}rem;
   height: ${DROP_HEIGHT}rem;
-  z-index: 2;
+  z-index: 2; 
 `;
-export const ShelfWrapper = styled(DNDItem)<{background: string, quantity: number, isEmpty: boolean}>`
-  ${({background, isEmpty}) => {
-    if(isEmpty) return null  
-    const shelfParams =  background === 'winter' ? ['branchShelf', 7, 5.8] : ['shelf', 9.2, 1.95]
+export const ShelfWrapper = styled(DNDItem)<{background: string, quantity: number, isEmpty: boolean, shelfNumber: number}>`
+  ${({background, isEmpty, shelfNumber}) => {
+    if(isEmpty) return null
+    let flowerWidth
+    let flowerHeight
+    if(background === 'flower') {
+      switch (shelfNumber) {
+        case 1: flowerWidth = 8, flowerHeight = 22.7 
+          break
+        case 2: flowerWidth = 4.7, flowerHeight = 29.7
+          break
+        case 3: flowerWidth = 4.5, flowerHeight = 19.7
+          break
+        case 4: flowerWidth = 2.85, flowerHeight = 29.7
+          break
+        case 5: flowerWidth = 7.35, flowerHeight = 22.7
+      } 
+    }
+    const shelfParams =  
+            background === 'winter' ? ['branchShelf', 7, 5.8]
+                    : background === 'flower' ? [`flower_shelf-${shelfNumber}`, flowerWidth , flowerHeight] 
+                            : ['shelf', 9.2, 1.95]
     return `
-    background-image: url(/images/${shelfParams[0]}.svg);
+    background-image: url(/shelfs/${shelfParams[0]}.svg);
     width: ${shelfParams[1]}rem;
     height: ${shelfParams[2]}rem;
+    z-index: 4;
     `
   } }
 `;
@@ -122,14 +144,6 @@ export const NumberWrapper = styled.div<{correctionY: boolean}>`
     z-index: -1;
   }
 `;
-export const Title = styled.div`
-  font-size: 2.5rem;
-  color: white;
-  text-align: center;
-  z-index: 1;
-  position: relative;
-  top: 2rem;
-`;
 
 export const WinWindowWrapper = styled.div`
   width: 100%;
@@ -139,7 +153,7 @@ export const WinWindowWrapper = styled.div`
   align-items: flex-start;
   backdrop-filter: blur(4px);
   position: absolute;
-  z-index: 4;
+  z-index: 5; 
 `
 export const Button = styled(Btn)<{background: string, color: string}>`
   position: absolute;
@@ -185,6 +199,7 @@ export const GameBackground = styled.div<{ background: string}>`
   background-size: cover;
   min-height: 100vh;
   display: flex;
+  justify-content: center;
   align-items: center;
 `
 export const DropBoard = styled.img`
@@ -195,6 +210,7 @@ export const ValuesDirection = styled.img`
   height: 69px;
   width: 358px;
   margin-bottom: 10px;
+  z-index: 5;
 `
 export const ChooseField = styled.div`
   position: absolute;

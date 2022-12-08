@@ -19,7 +19,7 @@ const Settings = () => {
     const [values, setValues] = useState<number>(0)
     const [isIncrease, setIsIncrease] = useState<boolean>(true)
     const [isRandom, setIsRandom] = useState<boolean>(true)
-    const [background, setBackground] = useState<number>(3)
+    const [background, setBackground] = useState<number>(4)
     const [error, setError] = useState<boolean>(false)
 
     const store = useStore()
@@ -53,14 +53,14 @@ const Settings = () => {
     }
 
     const setOptionsAndStartGame = () => {
-        if(!isRandom && background === 3) {
+        if(!isRandom && background === 4) {
             setError(true)
             setTimeout(() => setError(false), 1000)
             return
         }
         const array = generateRandomSymbols(values, isIncrease)
         store.setQuantity(itemsCount)
-        store.getRandomNumbers(array)
+        store.setRandomNumbers(array)
         store.setDirection(isIncrease)
         store.setBackground(generateBackground(background, isRandom))
         store.shuffle()
@@ -70,7 +70,7 @@ const Settings = () => {
     const redirect = () => router.push('/Board')
     const setRandomField = (e: React.ChangeEvent<HTMLInputElement>) => {
         setIsRandom(e.currentTarget.checked)
-        setBackground(3)
+        setBackground(4)
         clickOptions.play()
     }
     const changeBackground = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -79,8 +79,8 @@ const Settings = () => {
     }
     const generateBackground = (background: number, isRandom: boolean) => {
         if (isRandom) {
-            return Math.floor(Math.random() * 3)
-        } else if(background === 3) {
+            return Math.floor(Math.random() * 4)
+        } else if(background === 4) {
             setError(true)
         } else return background
     }
@@ -158,10 +158,11 @@ const Settings = () => {
                 </CustomCheckbox>
                 <CustomSelect>
                     <select disabled={isRandom} value={background} onChange={changeBackground}>
-                        <option disabled value={3}>Выберите тему</option>
+                        <option disabled value={4}>Выберите тему</option>
                         <option value={Backgrounds.cookie}>Сладости</option>
                         <option value={Backgrounds.coin}>Монетки</option>
                         <option value={Backgrounds.winter}>Новый Год</option>
+                        <option value={Backgrounds.flower}>Цветы</option>
                     </select>
                 </CustomSelect>
             </ChooseField>

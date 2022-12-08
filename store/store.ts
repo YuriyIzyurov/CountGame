@@ -9,6 +9,7 @@ export class NumbersGameStore {
     draggedPosition: PositionType | null = null; // начальная позиция drag-элемента в момент перетаскивания
     positions: Record<ShelvesEnum, ShelfItemsListType>; // содержимое ячеек на полках
     correctNumbers: (number|string)[] | null = null;
+    shuffledNumbers: (number|string)[] | null = null;
     currentNumbers: (number|string)[] | null = null;
     increase: boolean | null = null;
     background: Backgrounds | null = null;
@@ -20,16 +21,15 @@ export class NumbersGameStore {
 
     shuffle(): void { // перемешиваем штучки
         this.positions = {
-            [ShelvesEnum.top]: [...correctPositions].slice(0,this.quantity).sort(
-                () => Math.random() - 0.5
-            ),
+            [ShelvesEnum.top]: [...correctPositions].slice(0,this.quantity),
             [ShelvesEnum.bottom]: new Array(5).fill(null),
         };
         this.currentNumbers = [...correctPositions].fill(null)
     }
 
-    getRandomNumbers(symbols: (number | string)[]): void {
+    setRandomNumbers(symbols: (number | string)[]): void {
         this.correctNumbers = symbols
+        this.shuffledNumbers = symbols.sort(() => Math.random() - 0.5)
     };
 
 

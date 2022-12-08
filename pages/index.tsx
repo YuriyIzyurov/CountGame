@@ -5,23 +5,19 @@ import {GameBackground} from "../styles/styles";
 const Index = () => {
 
     return (
-        <GameBackground background={'backgrounds/cookie_background-empty.jpg'}>
+        <GameBackground background={'backgrounds/background-stars.jpg'}>
             <div className='navbar'>
-                <A href={'/'} text='Main'/>
-                <A href={'/Board'} text='Board'/>
-                <A href={'/settings'} text='Settings'/>
+                <A href={'/settings'} text='ИГРАТЬ'/>
             </div>
-            <h1>Главная страница</h1>
             <style jsx>
                 {`
                     .navbar {
-                    background: orange;
                     padding: 15px;
                     }
                     .link {
                     text-decoration: none;
-                    color: white;
-                    font-size: 24px;
+                    color: orange;
+                    font-size: 54px;
                     padding: 10px;
                     }
                 `}

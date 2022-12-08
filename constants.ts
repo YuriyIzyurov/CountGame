@@ -53,7 +53,8 @@ export const items: Record<ItemsEnum, ItemType> = {
 export enum Backgrounds {
     cookie,
     coin,
-    winter
+    winter,
+    flower
 }
 export enum Cookies {
     'cookie_1.svg',
@@ -75,6 +76,13 @@ export enum Toys {
     'toy_3.svg',
     'toy_4.svg',
     'toy_5.svg',
+}
+export enum Flowers {
+    'flower_1.svg',
+    'flower_2.svg',
+    'flower_3.svg',
+    'flower_4.svg',
+    'flower_5.svg',
 }
 export const ItemTypes = {
     ITEM: 'item'

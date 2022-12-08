@@ -4,7 +4,7 @@ import { useDrag } from "react-dnd";
 
 import { useStore } from "../store";
 
-import {Coins, Cookies, ItemType, ItemTypes, PositionType, Toys} from "../constants";
+import {Coins, Cookies, Flowers, ItemType, ItemTypes, PositionType, Toys} from "../constants";
 import { ITEM_DND_TYPE } from "../constants";
 import {ItemDragWrapper, NumberWrapper} from "../styles/styles";
 import {Dispatch, useEffect, useState} from "react";
@@ -26,6 +26,7 @@ const ItemDrag: React.FC<ItemDragProps> = ({item, position, number, quantity}: I
             case 0: return Cookies
             case 1: return Coins
             case 2: return Toys
+            case 3: return Flowers
         }
     }
     let Items = chooseImage(store.background)
@@ -43,7 +44,6 @@ const ItemDrag: React.FC<ItemDragProps> = ({item, position, number, quantity}: I
     }))
 
    const dragRef = (drag as unknown) as React.RefObject<HTMLDivElement>;
-
 
     return (
         <div>

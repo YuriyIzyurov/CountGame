@@ -19,6 +19,7 @@ const Playground: React.FC = () => {
     const router = useRouter()
 
     const background = Backgrounds[store.background]
+    const clickGoToOptions = new Audio('sounds/clickOption.mp3')
 
     const alias = {
         background: `backgrounds/${background}_background-empty.jpg`,
@@ -35,6 +36,7 @@ const Playground: React.FC = () => {
 
     const redirect = () => {
         store.refreshCurrentNumbers()
+        clickGoToOptions.play()
         return router.push('/settings')
     }
 
@@ -82,7 +84,7 @@ const Playground: React.FC = () => {
                             <ItemDrag
                                 item={items[itemKey]}
                                 position={[shelfIndex, itemIndex]}
-                                number={store.correctNumbers[itemKey]}
+                                number={store.shuffledNumbers[itemKey]}
                                 quantity={store.quantity}
                                 key={`item-${shelfKey}-${itemKey}`}
                             />
@@ -96,6 +98,7 @@ const Playground: React.FC = () => {
                             background={background}
                             isEmpty={+columnIndex+1 > store.quantity}
                             quantity={store.quantity}
+                            shelfNumber={+columnIndex + 1}
                         />
                         <ItemDrop
                             position={[ShelvesEnum.top, +columnIndex]}
