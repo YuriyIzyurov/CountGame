@@ -73,7 +73,7 @@ export class NumbersGameStore {
         this.currentNumbers = new Array(correctPositions.length).fill(null)
     }
     get positionKeys(): string[] {
-        return Object.keys(this.positions);
+        return Object.keys(this.positions || {});
     }
 
     getShelf(shelf: string): ShelfItemsListType {
@@ -82,7 +82,7 @@ export class NumbersGameStore {
     get isCorrect(): boolean { // проверяем правильные позиции
         return (
             JSON.stringify(this.correctNumbers) ===
-            JSON.stringify(Object.values(this.currentNumbers).filter(item => item))
+            JSON.stringify(Object.values(this.currentNumbers || {}).filter(item => item))
         );
     }
 
