@@ -1,14 +1,10 @@
 import * as React from "react";
 import { observer } from "mobx-react-lite";
 import { useDrag } from "react-dnd";
-
 import { useStore } from "../store";
-
 import {Coins, Cookies, Flowers, ItemType, ItemTypes, PositionType, Toys} from "../constants";
-import { ITEM_DND_TYPE } from "../constants";
 import {ItemDragWrapper, NumberWrapper} from "../styles/styles";
-import {Dispatch, useEffect, useState} from "react";
-import Item from "../components/Item";
+
 
 type ItemDragProps = {
     item: ItemType
