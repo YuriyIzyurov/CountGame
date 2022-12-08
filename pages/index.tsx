@@ -1,5 +1,4 @@
 import A from "../components/A";
-import Coockie1 from "../components/ComponentsSVG/Coockie1";
 import {GameBackground} from "../styles/styles";
 
 const Index = () => {

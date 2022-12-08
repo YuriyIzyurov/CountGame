@@ -1,4 +1,4 @@
-import React, {Dispatch, useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
     Button,
     ChooseSection,
