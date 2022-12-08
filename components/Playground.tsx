@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import ItemDrag from "../components/ItemDrag";
 import {Backgrounds, items, ShelvesEnum} from "../constants";
 import ItemDrop from "../components/ItemDrop";
@@ -19,7 +19,7 @@ const Playground: React.FC = () => {
     const router = useRouter()
 
     const background = Backgrounds[store.background]
-    const clickGoToOptions = new Audio('sounds/clickOption.mp3')
+    const clickGoToOptions = useRef<HTMLAudioElement>(new Audio('sounds/clickOption.mp3'))
 
     const alias = {
         background: `backgrounds/${background}_background-empty.jpg`,
@@ -29,14 +29,14 @@ const Playground: React.FC = () => {
     }
 
     useEffect(() => {
-        const audioWin = new Audio('sounds/win.mp3')
-        if(store.isCorrect) audioWin.play()
+        const audioWin = useRef<HTMLAudioElement>(new Audio('sounds/win.mp3'))
+        if(store.isCorrect) audioWin.current.play()
     }, [store.isCorrect])
 
 
     const redirect = () => {
         store.refreshCurrentNumbers()
-        clickGoToOptions.play()
+        clickGoToOptions.current.play()
         return router.push('/settings')
     }
 
