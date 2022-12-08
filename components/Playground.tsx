@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {MutableRefObject, useEffect, useRef} from 'react';
 import ItemDrag from "../components/ItemDrag";
 import {Backgrounds, items, ShelvesEnum} from "../constants";
 import ItemDrop from "../components/ItemDrop";
@@ -19,7 +19,8 @@ const Playground: React.FC = () => {
     const router = useRouter()
 
     const background = Backgrounds[store.background]
-    const clickGoToOptions = useRef<HTMLAudioElement>(new Audio('sounds/clickOption.mp3'))
+    const clickGoToOptions = useRef<undefined|HTMLAudioElement>(typeof Audio !== "undefined" ? new Audio('sounds/clickOption.mp3') : undefined)
+    const audioWin = useRef<undefined|HTMLAudioElement>(typeof Audio !== "undefined" ? new Audio('sounds/win.mp3') : undefined)
 
     const alias = {
         background: `backgrounds/${background}_background-empty.jpg`,
@@ -29,8 +30,7 @@ const Playground: React.FC = () => {
     }
 
     useEffect(() => {
-        const audioWin = useRef<HTMLAudioElement>(new Audio('sounds/win.mp3'))
-        if(store.isCorrect) audioWin.current.play()
+        if(store.isCorrect) audioWin.current?.play()
     }, [store.isCorrect])
 
 
@@ -40,21 +40,8 @@ const Playground: React.FC = () => {
         return router.push('/settings')
     }
 
-    const setInitialPositions = (itemIndex: number): number => {
-        let itemPosition = itemIndex
-        if(store.quantity) {
-            switch(store.quantity) {
-                case 2: itemPosition = itemIndex === 0 ? itemIndex + 1 : itemIndex + 2
-                    break
-                case 3: itemPosition =  itemIndex + 1
-                    break
-                case 4:
-                case 5: itemPosition =  itemIndex
-            }
-        }
-        return itemPosition
-    }
-    const audio = (path: string): HTMLAudioElement => new Audio(path)
+    const audio = (path: string): MutableRefObject <HTMLAudioElement> =>
+        useRef<HTMLAudioElement>(typeof Audio !== "undefined" ? new Audio(path) : undefined)
 
     return (
         <GameBackground background={alias.background}>
@@ -102,13 +89,13 @@ const Playground: React.FC = () => {
                         />
                         <ItemDrop
                             position={[ShelvesEnum.top, +columnIndex]}
-                            audio={audio(alias.audioShelf)}
+                            audio={audio(alias.audioShelf).current}
                             isEmpty={+columnIndex+1 > store.quantity}
                             quantity={store.quantity}
                         />
                         <ItemDrop
                             position={[ShelvesEnum.bottom, +columnIndex]}
-                            audio={audio(alias.audioDrop)}
+                            audio={audio(alias.audioDrop).current}
                         />
                     </div>
                 ))}

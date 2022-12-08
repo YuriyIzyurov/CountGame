@@ -24,9 +24,9 @@ const Settings = () => {
 
     const store = useStore()
     const router = useRouter()
-    const clickValue = useRef<HTMLAudioElement>(new Audio('sounds/clickOption.mp3'))
-    const clickOptions = useRef<HTMLAudioElement>(new Audio('sounds/clickDirectionAndRandom.mp3'))
-    const clickStart = useRef<HTMLAudioElement>(new Audio('sounds/clickStartGame.mp3'))
+    const clickValue = useRef<HTMLAudioElement|undefined>(typeof Audio !== "undefined" ? new Audio('sounds/clickOption.mp3') : undefined)
+    const clickOptions = useRef<HTMLAudioElement|undefined>(typeof Audio !== "undefined" ? new Audio('sounds/clickDirectionAndRandom.mp3') : undefined)
+    const clickStart = useRef<HTMLAudioElement|undefined>(typeof Audio !== "undefined" ? new Audio('sounds/clickStartGame.mp3') : undefined)
 
     const chooseSymbol = (values: number) => {
         return values === 0
