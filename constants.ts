@@ -31,23 +31,23 @@ export type ItemGlyphType = {
 export const items: Record<ItemsEnum, ItemType> = {
     [ItemsEnum.first]: {
         id: ItemsEnum.first,
-        image: "/images/"
+        image: "DragDropGame/images/"
     },
     [ItemsEnum.second]: {
         id: ItemsEnum.second,
-        image: "/images/"
+        image: "DragDropGame/images/"
     },
     [ItemsEnum.third]: {
         id: ItemsEnum.third,
-        image: "/images/"
+        image: "DragDropGame/images/"
     },
     [ItemsEnum.fourth]: {
         id: ItemsEnum.fourth,
-        image: "/images/"
+        image: "DragDropGame/images/"
     },
     [ItemsEnum.fifth]: {
         id: ItemsEnum.fifth,
-        image: "/images/"
+        image: "DragDropGame/images/"
     }
 };
 export enum Backgrounds {

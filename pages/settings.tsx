@@ -24,9 +24,9 @@ const Settings = () => {
 
     const store = useStore()
     const router = useRouter()
-    const clickValue = useRef<HTMLAudioElement|undefined>(typeof Audio !== "undefined" ? new Audio('sounds/clickOption.mp3') : undefined)
-    const clickOptions = useRef<HTMLAudioElement|undefined>(typeof Audio !== "undefined" ? new Audio('sounds/clickDirectionAndRandom.mp3') : undefined)
-    const clickStart = useRef<HTMLAudioElement|undefined>(typeof Audio !== "undefined" ? new Audio('sounds/clickStartGame.mp3') : undefined)
+    const clickValue = useRef<HTMLAudioElement|undefined>(typeof Audio !== "undefined" ? new Audio('DragDropGame/sounds/clickOption.mp3') : undefined)
+    const clickOptions = useRef<HTMLAudioElement|undefined>(typeof Audio !== "undefined" ? new Audio('DragDropGame/sounds/clickDirectionAndRandom.mp3') : undefined)
+    const clickStart = useRef<HTMLAudioElement|undefined>(typeof Audio !== "undefined" ? new Audio('DragDropGame/sounds/clickStartGame.mp3') : undefined)
 
     const chooseSymbol = (values: number) => {
         return values === 0
@@ -109,9 +109,9 @@ const Settings = () => {
         return [width, justifyContent, value]
     }
     return (
-        <GameBackground background={'backgrounds/background-stars.jpg'}>
+        <GameBackground background={'DragDropGame/backgrounds/background-stars.jpg'}>
           <ContentWrapper width={700} height={661}>
-            <img style={{width: '700px'}} src={'backgrounds/settings_window.svg'} alt={'settings'}/>
+            <img style={{width: '700px'}} src={'DragDropGame/backgrounds/settings_window.svg'} alt={'settings'}/>
             <ItemsCount>
                 {Array.from({length: 4}).map((item, index, arr) => {
                     const [width, justifyContent, itemCount] = setSelectorsOptions(index, arr)

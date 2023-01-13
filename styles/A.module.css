@@ -1,6 +1,25 @@
 .link {
-    font-size: 56px;
-    padding: 10px;
-    color: orange;
+    position: relative;
+    font-size: 4em;
     text-decoration: none;
+    line-height: 1em;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255,255,255,0.7);
+    margin-bottom: 15px;
+}
+.link:before {
+    content: attr(data-text);
+    position: absolute;
+    color: orange;
+    width: 0;
+    overflow: hidden;
+    transition: 1s;
+    border-right: 8px solid orange;
+    -webkit-text-stroke: 1px rgba(255,165,0,0.7);
+}
+.link:hover::before {
+    width: 100%;
+    filter: drop-shadow(0 0 25px #e5e5e5);
 }

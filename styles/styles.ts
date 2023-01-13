@@ -121,7 +121,7 @@ export const ShelfWrapper = styled(DNDItem)<{background: string, quantity: numbe
                     : background === 'flower' ? [`flower_shelf-${shelfNumber}`, flowerWidth , flowerHeight] 
                             : ['shelf', 9.2, 1.95]
     return `
-    background-image: url(/shelfs/${shelfParams[0]}.svg);
+    background-image: url(DragDropGame/shelfs/${shelfParams[0]}.svg);
     width: ${shelfParams[1]}rem;
     height: ${shelfParams[2]}rem;
     z-index: 4;
@@ -259,7 +259,7 @@ export const CustomCheckbox = styled.div`
         display: block;
         width: 33px;
         height: 33px;
-        background: url('/images/check.svg') no-repeat;
+        background: url('/DragDropGame/images/check.svg') no-repeat;
         background-size:  33px 33px;
         position: absolute;
         top: -2px;
