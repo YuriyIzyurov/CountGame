@@ -229,7 +229,7 @@ export class YetiEnemy extends Enemy {
     constructor(game) {
         super()
         this.game = game
-        this.width = 160 //184
+        this.width = 160
         this.height = 200
         this.x = this.game.width
         this.y = this.game.height - this.height - this.game.groundMargin + 20
