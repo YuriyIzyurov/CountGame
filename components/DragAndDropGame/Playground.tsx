@@ -1,8 +1,9 @@
 import React, {MutableRefObject, useEffect, useRef} from 'react';
 import ItemDrag from "../../components/DragAndDropGame/ItemDrag";
-import {Backgrounds, items, ShelvesEnum} from "../../constants";
+import {Backgrounds, convertImage, items, ShelvesEnum, toBase64} from "../../constants";
 import ItemDrop from "../../components/DragAndDropGame/ItemDrop";
 import { useStore } from "../../store";
+import Image from 'next/image';
 import { observer } from 'mobx-react-lite';
 import {
     Button,
@@ -12,6 +13,7 @@ import {
     GameBackground,
     DropBoard, ValuesDirection
 } from "../../styles/styles";
+import win_window from '../../public/DragDropGame/images/win_window.svg'
 import {useRouter} from "next/router";
 
 const Playground: React.FC = () => {
@@ -30,13 +32,13 @@ const Playground: React.FC = () => {
 
     const alias = {
         background: `DragDropGame/backgrounds/${background}_background-empty.jpg`,
-        dropBoard: `DragDropGame/boards/${background}-drop.png`,
+        dropBoard: `/DragDropGame/boards/${background}-drop.png`,
         audioShelf: `DragDropGame/sounds/${background}-onShelf.mp3`,
         audioDrop: `DragDropGame/sounds/${background}-drop.mp3`
     }
 
     useEffect(() => {
-        if(!store.background) router.push('/settings')
+        if(store.background === null) router.push('/settings')
         if(store.isCorrect) audioWin.current?.play()
     }, [store.isCorrect])
 
@@ -51,12 +53,21 @@ const Playground: React.FC = () => {
         useRef<HTMLAudioElement>(typeof Audio !== "undefined" ? new Audio(path) : undefined)
 
 
+
+
     return (
         <GameBackground background={alias.background}>
             {store.isCorrect && (
                 <WinWindowWrapper>
                     <div style={{position:'relative'}}>
-                        <img src={'DragDropGame/images/win_window.svg'}/>
+                        <Image src={win_window}
+                               width={853}
+                               height={598}
+                               placeholder="blur"
+                               blurDataURL={`data:image/svg+xml;base64,${toBase64(
+                                   convertImage(700, 475)
+                               )}`}
+                               alt="win"/>
                         <Button
                             onClick={redirect}
                             position={[441,307]}
